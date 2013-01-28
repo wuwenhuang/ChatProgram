@@ -219,7 +219,7 @@ public:
 	delegate void UpdateTextDelegate(String^ text);
 
 	System::Void UpdateText(String^ text) {
-		this->output->Text = text;
+		this->output->Text += "Client: " + text + "\n\n";
 	}
 
 	System::Void Read(void)
@@ -229,21 +229,11 @@ public:
 			if (serverConnect)
 			{	
 				char buffer[1000];
-				//memset(buffer,0,999);
 				int inDataLength=recv(mySocket,buffer,1000,0);
 				String^ tempString = gcnew String( s2ws(buffer).c_str());
 
-				//if (this->InvokeRequired)
-				//{
-					UpdateTextDelegate^ action = gcnew UpdateTextDelegate(this, &Form1::UpdateText);
-					this->BeginInvoke(action, tempString);
-					//this->Invoke(gcnew MethodInvoker(this, &ClientChat::Form1::Read));
-				//}
-				//else
-				//{
-				//	output->Text += tempString;
-				//}
-				
+				UpdateTextDelegate^ action = gcnew UpdateTextDelegate(this, &Form1::UpdateText);
+				this->BeginInvoke(action, tempString);
 			}
 		}
 	}
